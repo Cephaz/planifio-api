@@ -11,6 +11,10 @@ export const shape = (user: User): UserShape => {
   };
 };
 
+export const shapeNullable = (user: User | null): UserShape | null => {
+  return user ? shape(user) : null;
+};
+
 export const _getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await prisma.user.findUnique({where: {email}});
 
@@ -21,4 +25,13 @@ export const createUser = async (req: Request, data: schemas.Signup): Promise<Us
   const user = await prisma.user.create({data});
 
   return shape(user);
+};
+
+export const setRevokeTokensBefore = async (req: Request, id: string): Promise<UserShape | null> => {
+  const user = await prisma.user.update({
+    where: {id},
+    data: {revokeTokensBefore: new Date()},
+  });
+
+  return shapeNullable(user);
 };

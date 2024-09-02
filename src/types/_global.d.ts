@@ -3,7 +3,9 @@ import {TranslationFn} from '.';
 
 declare global {
   namespace Express {
-    type User = PrismaUser;
+    interface User extends PrismaUser {
+      id: string;
+    }
 
     interface Request {
       t: TranslationFn;
