@@ -6,7 +6,6 @@ declare global {
     type User = PrismaUser;
 
     interface Request {
-      object: unknown;
       t: TranslationFn;
     }
   }
