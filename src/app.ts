@@ -8,7 +8,7 @@ import router from './modules';
 import {translation} from './middleware';
 import {errorHandler} from './utils/errors';
 import {setZodErrors} from './middleware';
-import {CLIENT_ORIGIN} from './utils/secrets';
+import {CLIENT_ORIGIN, ENVIRONMENT} from './utils/secrets';
 import {secrets} from './utils';
 import * as strategies from './utils/auth';
 
@@ -17,7 +17,7 @@ const app: Application = express();
 app.use(
   cors({
     credentials: true,
-    origin: CLIENT_ORIGIN,
+    origin: ENVIRONMENT !== 'production' ? '*' : CLIENT_ORIGIN,
   }),
 );
 

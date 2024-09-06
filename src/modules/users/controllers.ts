@@ -45,3 +45,25 @@ export const logout: Handler = async (req, res) => {
   const message = req.t('logoutSucceed');
   return res.json({message});
 };
+
+export const profile: Handler = async (req, res) => {
+  assert(req.user);
+  const user = await services.getUserById(req, req.user.id);
+
+  return res.status(200).json(user);
+};
+
+export const changePassword: Handler = async (req, res) => {
+  assert(req.user);
+  const data = schemas.changePassword.parse(req.body);
+
+  if (!bcrypt.compareSync(data.oldPassword, req.user.password)) {
+    throw new SimpleError(400, req.t('oldPasswordIncorrect'));
+  }
+
+  const hashPassword = bcrypt.hashSync(data.newPassword, 10);
+  await services.setPassword(req, req.user.id, hashPassword);
+
+  const message = req.t('passwordUpdated');
+  return res.status(200).json({message});
+};
